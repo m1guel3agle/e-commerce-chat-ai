@@ -80,3 +80,21 @@ try:
     raise ChatServiceError("No se pudo conectar con Gemini AI.")
 except ChatServiceError as e:
     print(e)  # No se pudo conectar con Gemini AI.
+
+from src.application.dtos import ProductDTO, ChatMessageRequestDTO
+from pydantic import ValidationError
+
+# Precio inválido
+try:
+    ProductDTO(id=1, name="X", brand="Y", category="Z",
+               size="40", color="Rojo", price=-5, stock=10, description="")
+except ValidationError as e:
+    print("Error DTO precio:", e.errors()[0]['msg'])
+
+# Mensaje vacío
+try:
+    ChatMessageRequestDTO(session_id="s1", message="   ")
+except ValidationError as e:
+    print("Error DTO mensaje:", e.errors()[0]['msg'])
+
+print("DTOs OK")
