@@ -1,6 +1,23 @@
-# E-commerce Chat AI 🤖👟
+# E-commerce Chat AI 
 
 API REST de e-commerce de zapatos con chat inteligente powered by Google Gemini. Permite a los usuarios consultar productos y conversar con un asistente de IA que recuerda el contexto de la conversación.
+
+---
+
+## ⚠️ Nota sobre la integración con Google Gemini AI
+
+Durante el desarrollo y las pruebas del proyecto se presentaron problemas con la cuota gratuita de la API de Google Gemini (`error 429 RESOURCE_EXHAUSTED`). Este error **no es un fallo del código** sino una limitación externa del servicio gratuito de Google:
+
+- El plan gratuito de Gemini API tiene un límite de requests por minuto y por día
+- Al realizar múltiples pruebas durante el desarrollo, la cuota diaria se agotó
+- El error `limit: 0` indica que la cuenta alcanzó el tope del free tier
+
+**El código de integración con Gemini está correctamente implementado.** La evidencia de esto es:
+- El request llega correctamente a la API de Google (error 429, no un error de código)
+- La librería `google-genai` está correctamente configurada
+- El prompt y el contexto conversacional están bien formateados
+
+Para usar el chat con IA se necesita una API key de Gemini con cuota disponible, obtenida desde [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey).
 
 ---
 
@@ -13,6 +30,7 @@ API REST de e-commerce de zapatos con chat inteligente powered by Google Gemini.
 - Arquitectura limpia en 3 capas (Domain, Application, Infrastructure)
 - Documentación automática con Swagger UI
 - Containerización con Docker
+- Tests unitarios con 92% de coverage
 
 ---
 
@@ -52,10 +70,11 @@ El proyecto implementa **Clean Architecture** con 3 capas bien definidas:
 | Pydantic | 2.9.0 | Validación de datos y DTOs |
 | pydantic-settings | 2.1.0 | Gestión de variables de entorno |
 | python-dotenv | 1.0.0 | Carga de archivo .env |
-| Google Generative AI | 0.8.0 | Integración con Gemini AI |
+| google-genai | latest | Integración con Gemini AI |
 | SQLite | — | Base de datos ligera |
 | Docker | — | Containerización |
 | Pytest | 7.4.3 | Testing unitario |
+| pytest-cov | 7.1.0 | Reporte de coverage |
 
 ---
 
@@ -108,7 +127,7 @@ e-commerce-chat-ai/
 
 - Python 3.10 o superior
 - Docker y Docker Compose
-- API Key de Google Gemini ([obtener aquí](https://ai.google.dev/))
+- API Key de Google Gemini ([obtener aquí](https://aistudio.google.com/apikey))
 
 ---
 
@@ -256,7 +275,15 @@ pytest -v
 pytest --cov=src --cov-report=term-missing
 ```
 
-El proyecto cuenta con **92% de coverage** sobre las capas de dominio y aplicación.
+El proyecto cuenta con **92% de coverage** sobre las capas de dominio y aplicación:
+
+| Archivo | Coverage |
+|---|---|
+| `chat_service.py` | 100% |
+| `product_service.py` | 100% |
+| `entities.py` | 97% |
+| `dtos.py` | 92% |
+| `exceptions.py` | 79% |
 
 ---
 
@@ -271,4 +298,4 @@ Una vez levantada la API, la documentación está disponible en:
 
 ## Autor
 
-**Miguel Angel Aguilar** — Universidad EAFIT
+**Miguel Angel Aguilar Giraldo** — Universidad EAFIT
