@@ -1,6 +1,6 @@
 import os
 from typing import List
-import google.generativeai as genai
+from google import genai
 from src.domain.entities import Product, ChatContext
 
 
@@ -22,8 +22,8 @@ class GeminiService:
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             raise ValueError("GEMINI_API_KEY no está configurada en .env")
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        self.client = genai.Client(api_key=api_key)
+        self.model = "gemini-2.0-flash-lite"
 
     async def generate_response(
         self,
@@ -70,7 +70,10 @@ Usuario: {user_message}
 
 Asistente:"""
 
-            response = self.model.generate_content(prompt)
+            response = self.client.models.generate_content(
+                model=self.model,
+                contents=prompt
+            )
             return response.text
 
         except Exception as e:
